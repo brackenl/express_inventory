@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var BrandSchema = new Schema({
   name: { type: String, minlength: 3, maxlength: 20, required: true },
   description: { type: String, maxlength: 100, required: true },
+  imgUrl: { type: String, required: false },
 });
 
 BrandSchema.virtual("url").get(function () {

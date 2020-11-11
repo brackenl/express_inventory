@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  
+  div(class="d-flex flex-wrap align-content-stretch")
+    div(style="height: 250px; width: 250px" class="p-3 m-2 text-center")
+      img(src="/images/tyre.png" height= "100%" width="100%" class="d-block mx-auto mb-3")
+
+    div(style="height: 300px" class="p-3 m-2 ml-5 text-left")
+      p(class="d-block my-2") Name: #{tyre.name}
+      p(class="d-block my-2") Brand: 
+        a(href=tyre.brand.url) #{tyre.brand.name} 
+      p(class="d-block my-2") Type: #{tyre.category.name}
+      p(class="d-block my-2") #{tyre.description}
+      p(class="d-block my-2") Amount in stock: #{tyre.stock_amount}
+      - var i = tyre.rating
+      div
+        p(class="d-block my-2") Rating: 
+          while i > 0
+            img(src="/images/Gold_Star.svg" height="20px" width="20px")
+            - i--

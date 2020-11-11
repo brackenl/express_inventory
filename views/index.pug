@@ -2,4 +2,14 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to the #[em TyreStore] inventory management system, powered by Express.
+
+  if error
+    p Error getting dynamic content.
+  else
+    p The inventory has the following record counts:
+
+    ul
+      li #[strong Tyres:] !{data.tyre_count}
+      li #[strong Brands:] !{data.brand_count}
+      li #[strong Tyre categories:] !{data.category_count} 

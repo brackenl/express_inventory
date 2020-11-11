@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1= title
+  
+  div(class="d-flex flex-wrap align-content-stretch")
+    div(style="height: 250px; width: 250px" class="p-3 m-2 text-center")
+      if brand.imgUrl
+        img(src=brand.imgUrl height= "100%" width="100%" class="d-block mx-auto mb-3")
+      else 
+        img(src="/images/PlaceholderLc.png" height= "100%" width="100%" class="d-block mx-auto mb-3")
+
+    div(style="height: 300px" class="p-3 m-2 ml-5 text-left")
+      p(class="d-block my-2" class="font-weight-bold") #{brand.name}
+      p(class="d-block my-2") #{brand.description}
+     
+  h2 Tyres by #{brand.name}:
+
+  div(class="d-flex flex-wrap align-content-stretch")
+    each tyre in brand_tyres
+      div(style="minHeight: 200px; width: 250px" class="border border-dark p-3 my-3 mx-2 text-center")
+        img(src="/images/tyre.png" height= "100px" width="100px" class="d-block mx-auto mb-3")
+        a(href=tyre.url class="d-block my-2 font-weight-bold" style="font-size: 1.1rem") #{tyre.name}
+        p #{tyre.category.name} tyre
+        p #{tyre.description}

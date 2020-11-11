@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  
+  div(class="d-flex flex-wrap align-content-stretch")
+    - category_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+    
+    each category in category_list
+      div(style="minHeight: 200px; width: 250px" class="border border-dark p-3 m-2 text-center")
+        if category.imgUrl
+          img(src=category.imgUrl height= "100px" width="100px" class="d-block mx-auto mb-3")
+        else 
+          img(src="images/PlaceholderLC.png" height= "100px" width="100px" class="d-block mx-auto mb-3")
+        a(href=category.url class="d-block my-2 font-weight-bold" style="font-size: 1.1rem") #{category.name}
+        p #{category.description}
+
+    else
+      p There are no categories.

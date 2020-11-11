@@ -25,8 +25,12 @@ var tyres = [];
 var brands = [];
 var categories = [];
 
-function brandCreate(name, description, cb) {
-  var brand = new Brand({ name: name, description: description });
+function brandCreate(name, description, imgUrl, cb) {
+  var brand = new Brand({
+    name: name,
+    description: description,
+    imgUrl: imgUrl,
+  });
 
   brand.save(function (err) {
     if (err) {
@@ -39,8 +43,12 @@ function brandCreate(name, description, cb) {
   });
 }
 
-function categoryCreate(name, description, cb) {
-  var category = new Category({ name: name, description: description });
+function categoryCreate(name, description, imgUrl, cb) {
+  var category = new Category({
+    name: name,
+    description: description,
+    imgUrl: imgUrl,
+  });
 
   category.save(function (err) {
     if (err) {
@@ -58,8 +66,8 @@ function tyreCreate(
   description,
   stock_amount,
   rating,
-  brand,
   category,
+  brand,
   cb
 ) {
   var tyreComponents = {

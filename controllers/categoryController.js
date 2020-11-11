@@ -1,13 +1,52 @@
+var async = require("async");
+
 var Category = require("../models/category");
+var Tyre = require("../models/tyre");
 
 // Display list of all Categories.
 exports.category_list = function (req, res) {
-  res.send("NOT IMPLEMENTED: Category list");
+  Category.find({}, "name description").exec(function (err, list_categories) {
+    if (err) {
+      return next(err);
+    }
+    //Successful, so render
+    res.render("category_list", {
+      title: "Category List",
+      category_list: list_categories,
+    });
+  });
 };
 
 // Display detail page for a specific Category.
 exports.category_detail = function (req, res) {
-  res.send("NOT IMPLEMENTED: Category detail: " + req.params.id);
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+
+      category_tyres: function (callback) {
+        Tyre.find({ category: req.params.id }).populate("brand").exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.category == null) {
+        // No results.
+        var err = new Error("Genre not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render
+      res.render("category_detail", {
+        title: results.category.name,
+        category: results.category,
+        category_tyres: results.category_tyres,
+      });
+    }
+  );
 };
 
 // Display Category create form on GET.

@@ -1,7 +1,39 @@
 doctype html
-html
+html(lang='en')
   head
     title= title
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css", integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z", crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    nav(class="navbar navbar-expand-lg navbar-light bg-light mb-2")
+      a(class="navbar-brand" href="/") TyreStore
+      button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+        span(class="navbar-toggler-icon")
+      div(class="collapse navbar-collapse" id="navbarNav")
+        block navbar
+          ul(class='navbar-nav d-flex')
+            li(class="nav-item") 
+              a(href='/tyres' class="nav-link") Tyres
+            li(class="nav-item") 
+              a(href='/brands' class="nav-link") Brands
+            li(class="nav-item") 
+              a(href='/categories' class="nav-link") Categories
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Create new
+              div(class="dropdown-menu" aria-labelledby="navbarDropdown")
+                a(class="dropdown-item" href="/tyre/create") Tyre
+                a(class="dropdown-item" href="/brand/create") Brand
+                a(class="dropdown-item" href="/category/create") Category
+            //- li(class="nav-item") 
+            //-   a(href='/tyre/create' class="nav-link") New tyre
+            //- li(class="nav-item") 
+            //-   a(href='/brand/create' class="nav-link") New brand
+            //- li(class="nav-item") 
+            //-   a(href='/category/create' class="nav-link") New category
+                
+    div(class='col-sm-12')
+      block content
