@@ -277,7 +277,7 @@ exports.tyre_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("img-file")
+  body("imgFile")
     .custom((value, { req }) => {
       if (!req.file) {
         return "No image";
