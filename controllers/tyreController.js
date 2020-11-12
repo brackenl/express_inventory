@@ -190,10 +190,130 @@ exports.tyre_delete_post = function (req, res) {
 
 // Display Tyre update form on GET.
 exports.tyre_update_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Tyre update GET");
+  // Get tyre, categories and brands for form.
+  async.parallel(
+    {
+      tyre: function (callback) {
+        Tyre.findById(req.params.id)
+          .populate("brand")
+          .populate("category")
+          .exec(callback);
+      },
+      brands: function (callback) {
+        Brand.find(callback);
+      },
+      categories: function (callback) {
+        Category.find(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.tyre == null) {
+        // No results.
+        var err = new Error("Tyre not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Success.
+
+      res.render("tyre_form", {
+        title: "Update Tyre",
+        brands: results.brands,
+        categories: results.categories,
+        tyre: results.tyre,
+      });
+    }
+  );
 };
 
 // Handle Tyre update on POST.
-exports.tyre_update_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Tyre update POST");
-};
+exports.tyre_update_post = [
+  // Validate and sanitise fields.
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Name must be specified."),
+  body("description")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Description must be specified."),
+  body("stock_amount")
+    .trim()
+    .isInt({ min: 0 })
+    .withMessage("Stock amount must be a non-negative number."),
+  body("rating")
+    .trim()
+    .isInt({ min: 0, max: 5 })
+    .withMessage("Rating must be a number between 1 and 5."),
+  body("brand", "Brand must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category", "Category must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Tyre object with escaped/trimmed data and old id.
+    var tyre = new Tyre({
+      name: req.body.name,
+      description: req.body.description,
+      stock_amount: req.body.stock_amount,
+      rating: req.body.rating,
+      brand: req.body.brand,
+      category: req.body.category,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get all categories and brands for form.
+      async.parallel(
+        {
+          brands: function (callback) {
+            Brand.find(callback);
+          },
+          categories: function (callback) {
+            Category.find(callback);
+          },
+        },
+        function (err, results) {
+          if (err) {
+            return next(err);
+          }
+
+          res.render("tyre_form", {
+            title: "Update Tyre",
+            brands: results.brands,
+            categories: results.categories,
+            tyre: tyre,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      Tyre.findByIdAndUpdate(req.params.id, tyre, {}, function (
+        err,
+        updatedTyre
+      ) {
+        if (err) {
+          return next(err);
+        }
+        // Successful - redirect to tyre detail page.
+        res.redirect(updatedTyre.url);
+      });
+    }
+  },
+];

@@ -182,10 +182,67 @@ exports.category_delete_post = function (req, res) {
 
 // Display Category update form on GET.
 exports.category_update_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Category update GET");
+  // Get brand details for form.
+  Category.findById(req.params.id, function (err, category) {
+    if (err) {
+      return next(err);
+    }
+    if (category == null) {
+      // No results.
+      var err = new Error("Category not found");
+      err.status = 404;
+      return next(err);
+    }
+    // Success.
+    res.render("category_form", {
+      title: "Update Category",
+      category: category,
+    });
+  });
 };
 
 // Handle Category update on POST.
-exports.category_update_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Category update POST");
-};
+exports.category_update_post = [
+  // Validate and sanitise fields.
+  body("name", "Category name required").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description required")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Category object with escaped/trimmed data and old id.
+    var category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      res.render("category_form", {
+        title: "Update Category",
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      Category.findByIdAndUpdate(req.params.id, category, {}, function (
+        err,
+        updatedCategory
+      ) {
+        if (err) {
+          return next(err);
+        }
+        // Successful - redirect to Category detail page.
+        res.redirect(updatedCategory.url);
+      });
+    }
+  },
+];

@@ -174,10 +174,67 @@ exports.brand_delete_post = function (req, res) {
 
 // Display Brand update form on GET.
 exports.brand_update_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Brand update GET");
+  // Get brand details for form.
+  Brand.findById(req.params.id, function (err, brand) {
+    if (err) {
+      return next(err);
+    }
+    if (brand == null) {
+      // No results.
+      var err = new Error("Brand not found");
+      err.status = 404;
+      return next(err);
+    }
+    // Success.
+    res.render("brand_form", {
+      title: "Update Brand",
+      brand: brand,
+    });
+  });
 };
 
 // Handle Brand update on POST.
-exports.brand_update_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Brand update POST");
-};
+exports.brand_update_post = [
+  // Validate and sanitise fields.
+  body("name", "Brand name required").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description required")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Brand object with escaped/trimmed data and old id.
+    var brand = new Brand({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      res.render("brand_form", {
+        title: "Update Brand",
+        brand: brand,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      Brand.findByIdAndUpdate(req.params.id, brand, {}, function (
+        err,
+        updatedBrand
+      ) {
+        if (err) {
+          return next(err);
+        }
+        // Successful - redirect to tyre detail page.
+        res.redirect(updatedBrand.url);
+      });
+    }
+  },
+];
