@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 
+var upload = require("../utils/multUpload");
+
 // Require controller modules.
 var tyreController = require("../controllers/tyreController");
 
@@ -11,7 +13,11 @@ router.get("/tyres", tyreController.tyre_list);
 router.get("/create", tyreController.tyre_create_get);
 
 // POST request for creating Tyre.
-router.post("/create", tyreController.tyre_create_post);
+router.post(
+  "/create",
+  upload.single("imgFile"),
+  tyreController.tyre_create_post
+);
 
 // GET request to delete Tyre.
 router.get("/:id/delete", tyreController.tyre_delete_get);
@@ -23,7 +29,11 @@ router.post("/:id/delete", tyreController.tyre_delete_post);
 router.get("/:id/update", tyreController.tyre_update_get);
 
 // POST request to update Tyre.
-router.post("/:id/update", tyreController.tyre_update_post);
+router.post(
+  "/:id/update",
+  upload.single("imgFile"),
+  tyreController.tyre_update_post
+);
 
 // GET request for one Tyre.
 router.get("/:id", tyreController.tyre_detail);

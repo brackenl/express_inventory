@@ -97,9 +97,28 @@ exports.tyre_create_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
+  body("img-file")
+    .custom((value, { req }) => {
+      if (!req.file) {
+        return "No image";
+      } else if (
+        req.file.mimetype === "image/bmp" ||
+        req.file.mimetype === "image/gif" ||
+        req.file.mimetype === "image/jpeg" ||
+        req.file.mimetype === "image/png" ||
+        req.file.mimetype === "image/tiff" ||
+        req.file.mimetype === "image/webp"
+      ) {
+        return "image"; // return "non-falsy" value to indicate valid data"
+      } else {
+        return false; // return "falsy" value to indicate invalid data
+      }
+    })
+    .withMessage("You may only submit image files."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
+    console.log(req.file);
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
@@ -142,6 +161,7 @@ exports.tyre_create_post = [
         rating: req.body.rating,
         brand: req.body.brand,
         category: req.body.category,
+        imgUrl: req.file ? "/images/" + req.file.filename : null,
       });
       tyre.save(function (err) {
         if (err) {
@@ -257,9 +277,28 @@ exports.tyre_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
+  body("img-file")
+    .custom((value, { req }) => {
+      if (!req.file) {
+        return "No image";
+      } else if (
+        req.file.mimetype === "image/bmp" ||
+        req.file.mimetype === "image/gif" ||
+        req.file.mimetype === "image/jpeg" ||
+        req.file.mimetype === "image/png" ||
+        req.file.mimetype === "image/tiff" ||
+        req.file.mimetype === "image/webp"
+      ) {
+        return "image"; // return "non-falsy" value to indicate valid data"
+      } else {
+        return false; // return "falsy" value to indicate invalid data
+      }
+    })
+    .withMessage("You may only submit image files."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
+    console.log(req.file);
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
@@ -271,6 +310,7 @@ exports.tyre_update_post = [
       rating: req.body.rating,
       brand: req.body.brand,
       category: req.body.category,
+      imgUrl: req.file ? "/images/" + req.file.filename : null,
       _id: req.params.id,
     });
 

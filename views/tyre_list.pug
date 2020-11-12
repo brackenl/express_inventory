@@ -7,7 +7,10 @@ block content
     - tyre_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
     each tyre in tyre_list
       div(style="minHeight: 200px; width: 250px" class="border border-dark p-3 m-2 text-center")
-        img(src="images/tyre.png" height= "100px" width="100px" class="d-block mx-auto mb-3")
+        if tyre.imgUrl
+          img(src=tyre.imgUrl height= "100px" width="100px" class="d-block mx-auto mb-3")
+        else
+          img(src="images/tyre.png" height= "100px" width="100px" class="d-block mx-auto mb-3")
         a(href=tyre.url class="d-block my-2 font-weight-bold" style="font-size: 1.1rem") #{tyre.name}
         a(href=tyre.brand.url class="d-block my-2") #{tyre.brand.name} 
         p #{tyre.category.name} tyre

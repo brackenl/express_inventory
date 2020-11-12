@@ -6,7 +6,7 @@ var Tyre = require("../models/tyre");
 
 // Display list of all Brands.
 exports.brand_list = function (req, res) {
-  Brand.find({}, "name description").exec(function (err, list_brands) {
+  Brand.find({}, function (err, list_brands) {
     if (err) {
       return next(err);
     }
@@ -60,6 +60,24 @@ exports.brand_create_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
+  body("img-file")
+    .custom((value, { req }) => {
+      if (!req.file) {
+        return "No image";
+      } else if (
+        req.file.mimetype === "image/bmp" ||
+        req.file.mimetype === "image/gif" ||
+        req.file.mimetype === "image/jpeg" ||
+        req.file.mimetype === "image/png" ||
+        req.file.mimetype === "image/tiff" ||
+        req.file.mimetype === "image/webp"
+      ) {
+        return "image"; // return "non-falsy" value to indicate valid data"
+      } else {
+        return false; // return "falsy" value to indicate invalid data
+      }
+    })
+    .withMessage("You may only submit image files."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
@@ -70,6 +88,7 @@ exports.brand_create_post = [
     var brand = new Brand({
       name: req.body.name,
       description: req.body.description,
+      imgUrl: req.file ? "/images/" + req.file.filename : null,
     });
 
     if (!errors.isEmpty()) {
@@ -201,6 +220,24 @@ exports.brand_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
+  body("img-file")
+    .custom((value, { req }) => {
+      if (!req.file) {
+        return "No image";
+      } else if (
+        req.file.mimetype === "image/bmp" ||
+        req.file.mimetype === "image/gif" ||
+        req.file.mimetype === "image/jpeg" ||
+        req.file.mimetype === "image/png" ||
+        req.file.mimetype === "image/tiff" ||
+        req.file.mimetype === "image/webp"
+      ) {
+        return "image"; // return "non-falsy" value to indicate valid data"
+      } else {
+        return false; // return "falsy" value to indicate invalid data
+      }
+    })
+    .withMessage("You may only submit image files."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
@@ -211,6 +248,7 @@ exports.brand_update_post = [
     var brand = new Brand({
       name: req.body.name,
       description: req.body.description,
+      imgUrl: req.file ? "/images/" + req.file.filename : null,
       _id: req.params.id,
     });
 

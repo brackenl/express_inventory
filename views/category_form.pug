@@ -9,7 +9,10 @@ block content
       input#name.form-control.col-sm-9(type='text', placeholder='Name' name='name' value=(undefined===category ? '' : category.name))
     div.form-group.row.col-sm-9
       label.col-sm-3.col-form-label(for='description') Category description:
-      input#name.form-control.col-sm-9(type='text', placeholder='Description' name='description' value=(undefined===category ? '' : category.description))
+      input#description.form-control.col-sm-9(type='text', placeholder='Description' name='description' value=(undefined===category ? '' : category.description))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='img-file') Category image (optional):
+      input#img-file.form-control.col-sm-9.p-1(type="file" name="img-file")
     
     if errors 
       ul

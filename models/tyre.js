@@ -9,6 +9,7 @@ var TyreSchema = new Schema({
   rating: { type: Number, required: true },
   brand: { type: Schema.Types.ObjectId, ref: "Brand", required: true },
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+  imgUrl: { type: String, required: false },
 });
 
 // Virtual for tyre's URL

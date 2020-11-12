@@ -11,12 +11,12 @@ block content
     
     div.form-group.row.col-sm-9
       label.col-sm-3.col-form-label(for='description') Tyre description:
-      input#name.form-control.col-sm-9(type='text', placeholder='Description' name='description' value=(undefined===tyre ? '' : tyre.description))
+      input#description.form-control.col-sm-9(type='text', placeholder='Description' name='description' value=(undefined===tyre ? '' : tyre.description))
 
           
     div.form-group.row.col-sm-9
       label.col-sm-3.col-form-label(for='stock_amount') Stock amount:
-      input#name.form-control.col-sm-9(type='number' min="1", placeholder='Stock amount' name='stock_amount' value=(undefined===tyre ? '' : tyre.stock_amount))
+      input#stock_amount.form-control.col-sm-9(type='number' min="1", placeholder='Stock amount' name='stock_amount' value=(undefined===tyre ? '' : tyre.stock_amount))
     
     div.form-group.row.col-sm-9
       label.col-sm-3.col-form-label(for='brand') Brand:
@@ -40,7 +40,11 @@ block content
     
     div.form-group.row.col-sm-9
       label.col-sm-3.col-form-label(for='rating') Tyre rating (out of 5):
-      input#name.form-control.col-sm-9(type='number' min="1" max="5", placeholder='Rating' name='rating' value=(undefined===tyre ? '' : tyre.rating))
+      input#rating.form-control.col-sm-9(type='number' min="1" max="5", placeholder='Rating' name='rating' value=(undefined===tyre ? '' : tyre.rating))
+
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='imgFile') Tyre image (optional):
+      input#imgFile.form-control.col-sm-9.p-1(type="file" name="imgFile")
 
     if errors 
       ul
