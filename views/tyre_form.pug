@@ -1,0 +1,74 @@
+
+extends layout
+
+block content
+  h1 #{title}
+
+  form(method='POST' action='')
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='name') Tyre name:
+      input#name.form-control.col-9(type='text', placeholder='Name' name='name' value=(undefined===tyre ? '' : tyre.name))
+    
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='description') Tyre description:
+      input#name.form-control.col-9(type='text', placeholder='Description' name='description' value=(undefined===tyre ? '' : tyre.description))
+
+          
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='stock_amount') Stock amount:
+      input#name.form-control.col-9(type='number' min="1", placeholder='Stock amount' name='stock_amount' value=(undefined===tyre ? '' : tyre.stock_amount))
+    
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='brand') Brand:
+      select#brand.form-control.col-9(type='select', placeholder='Select brand' name='brand' required='true' )
+        - brands.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        for brand in brands
+          if tyre
+            option(value=brand._id selected=(brand._id.toString()===tyre.brand._id.toString() ? 'selected' : false) ) #{brand.name}
+          else
+            option(value=brand._id) #{brand.name}
+    
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='category') Category:
+      select#category.form-control.col-9(type='select', placeholder='Select category' name='category' required='true' )
+        - categories.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        for category in categories
+          if tyre
+            option(value=category._id selected=(category._id.toString()===tyre.category._id.toString() ? 'selected' : false) ) #{category.name}
+          else
+            option(value=category._id) #{category.name}
+    
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='rating') Tyre rating (out of 5):
+      input#name.form-control.col-9(type='number' min="1" max="5", placeholder='Rating' name='rating' value=(undefined===tyre ? '' : tyre.rating))
+
+    if errors 
+      ul
+        for error in errors
+          li.text-danger.font-weight-bold!= error.msg
+
+    button.btn.btn-primary(type='submit') Submit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//- <div class="form-group row">
+//-     <label for="brand" class="col-4 col-form-label">Brand</label> 
+//-     <div class="col-8">
+//-       <select id="brand" name="brand" class="custom-select" required="required">
+//-         <option value="rabbit">Rabbit</option>
+//-         <option value="duck">Duck</option>
+//-         <option value="fish">Fish</option>
+//-       </select>
+//-     </div>

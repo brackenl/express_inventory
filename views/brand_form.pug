@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1 #{title}
+
+  form(method='POST' action='')
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='name') Brand name:
+      input#name.form-control.col-9(type='text', placeholder='Name' name='name' value=(undefined===brand ? '' : brand.name))
+    div.form-group.row.col-9
+      label.col-3.col-form-label(for='description') Brand description:
+      input#name.form-control.col-9(type='text', placeholder='Description' name='description' value=(undefined===brand ? '' : brand.description))
+
+
+    if errors 
+      ul
+        for error in errors
+          li.text-danger.font-weight-bold!= error.msg
+
+    button.btn.btn-primary(type='submit') Submit
