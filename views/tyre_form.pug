@@ -42,12 +42,9 @@ block content
       label.col-sm-3.col-form-label(for='rating') Tyre rating (out of 5):
       input#rating.form-control.col-sm-9(type='number' min="1" max="5", placeholder='Rating' name='rating' value=(undefined===tyre ? '' : tyre.rating))
 
-    if tyre 
-
-      div.form-group.row.col-sm-9.border.border-danger.p-2
-        p.col-sm-12.text-danger Admin password required to update record
-        label.col-sm-3.col-form-label(for='password') Admin password:
-        input#description.form-control.col-sm-9(type='password', placeholder='Password' name='password' value='')  
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='imgFile') Tyre image (optional):
+      input#imgFile.form-control.col-sm-9.p-1(type="file" name="imgFile")
 
     if errors 
       ul

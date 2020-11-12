@@ -14,12 +14,6 @@ block content
       label.col-sm-3.col-form-label(for='img-file') Brand logo (optional):
       input#img-file.form-control.col-sm-9.p-1(type="file" name="img-file")
 
-    if brand 
-
-      div.form-group.row.col-sm-9.border.border-danger.p-2
-        p.col-sm-12.text-danger Admin password required to update record
-        label.col-sm-3.col-form-label(for='password') Admin password:
-        input#description.form-control.col-sm-9(type='password', placeholder='Password' name='password' value='')  
 
     if errors 
       ul

@@ -160,87 +160,44 @@ exports.category_delete_get = function (req, res) {
 };
 
 // Handle Category delete on POST.
-exports.category_delete_post = [
-  // Validate and sanitise fields.
-  body("password")
-    .trim()
-    .escape()
-    .equals("password123")
-    .withMessage("Admin password incorrect."),
-
-  function (req, res, next) {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      // There are errors. Render form again with sanitized values/error messages.
-      async.parallel(
-        {
-          category: function (callback) {
-            Category.findById(req.params.id).exec(callback);
-          },
-          category_tyres: function (callback) {
-            Tyre.find({ category: req.params.id }).exec(callback);
-          },
-        },
-        function (err, results) {
+exports.category_delete_post = function (req, res) {
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      category_tyres: function (callback) {
+        Tyre.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.category_tyres.length > 0) {
+        // Category has tyres. Render in same way as for GET route.
+        res.render("category_delete", {
+          title: "Delete Category",
+          category: results.category,
+          category_tyres: results.category_tyres,
+        });
+        return;
+      } else {
+        // Author has no books. Delete object and redirect to the list of categories.
+        Category.findByIdAndRemove(req.body.categoryid, function deleteCategory(
+          err
+        ) {
           if (err) {
             return next(err);
           }
-          if (results.category == null) {
-            // No results.
-            res.redirect("/categories");
-          }
-          res.render("category_delete", {
-            title: "Delete Category",
-            category: results.category,
-            category_tyres: results.category_tyres,
-            errors: errors.array(),
-          });
-
-          return;
-        }
-      );
-    } else {
-      async.parallel(
-        {
-          category: function (callback) {
-            Category.findById(req.params.id).exec(callback);
-          },
-          category_tyres: function (callback) {
-            Tyre.find({ category: req.params.id }).exec(callback);
-          },
-        },
-        function (err, results) {
-          if (err) {
-            return next(err);
-          }
-          // Success
-          if (results.category_tyres.length > 0) {
-            // Category has tyres. Render in same way as for GET route.
-            res.render("category_delete", {
-              title: "Delete Category",
-              category: results.category,
-              category_tyres: results.category_tyres,
-            });
-            return;
-          } else {
-            // Author has no books. Delete object and redirect to the list of categories.
-            Category.findByIdAndRemove(
-              req.body.categoryid,
-              function deleteCategory(err) {
-                if (err) {
-                  return next(err);
-                }
-                // Success - go to category list
-                res.redirect("/categories");
-              }
-            );
-          }
-        }
-      );
+          // Success - go to category list
+          res.redirect("/categories");
+        });
+      }
     }
-  },
-];
+  );
+};
 
 // Display Category update form on GET.
 exports.category_update_get = function (req, res) {
@@ -289,11 +246,6 @@ exports.category_update_post = [
       }
     })
     .withMessage("You may only submit image files."),
-  body("password")
-    .trim()
-    .escape()
-    .equals("password123")
-    .withMessage("Admin password incorrect."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
