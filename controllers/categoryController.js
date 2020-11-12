@@ -95,14 +95,14 @@ exports.category_create_post = [
         }
 
         if (found_category) {
-          // Brand exists, redirect to its detail page.
+          // Category exists, redirect to its detail page.
           res.redirect(found_category.url);
         } else {
           category.save(function (err) {
             if (err) {
               return next(err);
             }
-            // Brand saved. Redirect to brand detail page.
+            // Category saved. Redirect to category detail page.
             res.redirect(category.url);
           });
         }
@@ -113,12 +113,71 @@ exports.category_create_post = [
 
 // Display Category delete form on GET.
 exports.category_delete_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Category delete GET");
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      category_tyres: function (callback) {
+        Tyre.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.category == null) {
+        // No results.
+        res.redirect("/categories");
+      }
+      // Successful, so render.
+      res.render("category_delete", {
+        title: "Delete Category",
+        category: results.category,
+        category_tyres: results.category_tyres,
+      });
+    }
+  );
 };
 
 // Handle Category delete on POST.
 exports.category_delete_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Category delete POST");
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      category_tyres: function (callback) {
+        Tyre.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.category_tyres.length > 0) {
+        // Category has tyres. Render in same way as for GET route.
+        res.render("category_delete", {
+          title: "Delete Category",
+          category: results.category,
+          category_tyres: results.category_tyres,
+        });
+        return;
+      } else {
+        // Author has no books. Delete object and redirect to the list of categories.
+        Category.findByIdAndRemove(req.body.categoryid, function deleteCategory(
+          err
+        ) {
+          if (err) {
+            return next(err);
+          }
+          // Success - go to category list
+          res.redirect("/categories");
+        });
+      }
+    }
+  );
 };
 
 // Display Category update form on GET.

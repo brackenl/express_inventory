@@ -23,3 +23,11 @@ block content
         a(href=tyre.url class="d-block my-2 font-weight-bold" style="font-size: 1.1rem") #{tyre.name}
         p #{tyre.category.name} tyre
         p #{tyre.description}
+
+  hr
+  div.d-flex
+    p.mr-5
+      a(href=brand.url+'/update') Update brand
+
+    p.mr-5
+      a(href=brand.url+'/delete') Delete brand

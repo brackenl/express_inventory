@@ -4,12 +4,12 @@ block content
   h1 #{title}
 
   form(method='POST' action='')
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='name') Category name:
-      input#name.form-control.col-9(type='text', placeholder='Name' name='name' value=(undefined===category ? '' : category.name))
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='description') Category description:
-      input#name.form-control.col-9(type='text', placeholder='Description' name='description' value=(undefined===category ? '' : category.description))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='name') Category name:
+      input#name.form-control.col-sm-9(type='text', placeholder='Name' name='name' value=(undefined===category ? '' : category.name))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='description') Category description:
+      input#name.form-control.col-sm-9(type='text', placeholder='Description' name='description' value=(undefined===category ? '' : category.description))
     
     if errors 
       ul

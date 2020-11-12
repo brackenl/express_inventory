@@ -5,22 +5,22 @@ block content
   h1 #{title}
 
   form(method='POST' action='')
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='name') Tyre name:
-      input#name.form-control.col-9(type='text', placeholder='Name' name='name' value=(undefined===tyre ? '' : tyre.name))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='name') Tyre name:
+      input#name.form-control.col-sm-9(type='text', placeholder='Name' name='name' value=(undefined===tyre ? '' : tyre.name))
     
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='description') Tyre description:
-      input#name.form-control.col-9(type='text', placeholder='Description' name='description' value=(undefined===tyre ? '' : tyre.description))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='description') Tyre description:
+      input#name.form-control.col-sm-9(type='text', placeholder='Description' name='description' value=(undefined===tyre ? '' : tyre.description))
 
           
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='stock_amount') Stock amount:
-      input#name.form-control.col-9(type='number' min="1", placeholder='Stock amount' name='stock_amount' value=(undefined===tyre ? '' : tyre.stock_amount))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='stock_amount') Stock amount:
+      input#name.form-control.col-sm-9(type='number' min="1", placeholder='Stock amount' name='stock_amount' value=(undefined===tyre ? '' : tyre.stock_amount))
     
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='brand') Brand:
-      select#brand.form-control.col-9(type='select', placeholder='Select brand' name='brand' required='true' )
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='brand') Brand:
+      select#brand.form-control.col-sm-9(type='select', placeholder='Select brand' name='brand' required='true' )
         - brands.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
         for brand in brands
           if tyre
@@ -28,9 +28,9 @@ block content
           else
             option(value=brand._id) #{brand.name}
     
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='category') Category:
-      select#category.form-control.col-9(type='select', placeholder='Select category' name='category' required='true' )
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='category') Category:
+      select#category.form-control.col-sm-9(type='select', placeholder='Select category' name='category' required='true' )
         - categories.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
         for category in categories
           if tyre
@@ -38,9 +38,9 @@ block content
           else
             option(value=category._id) #{category.name}
     
-    div.form-group.row.col-9
-      label.col-3.col-form-label(for='rating') Tyre rating (out of 5):
-      input#name.form-control.col-9(type='number' min="1" max="5", placeholder='Rating' name='rating' value=(undefined===tyre ? '' : tyre.rating))
+    div.form-group.row.col-sm-9
+      label.col-sm-3.col-form-label(for='rating') Tyre rating (out of 5):
+      input#name.form-control.col-sm-9(type='number' min="1" max="5", placeholder='Rating' name='rating' value=(undefined===tyre ? '' : tyre.rating))
 
     if errors 
       ul

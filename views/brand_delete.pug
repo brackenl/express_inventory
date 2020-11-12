@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1 #{title}: #{brand.name}
+  
+  if brand_tyres.length
+  
+    p #[strong You must delete the following tyres before attempting to delete this brand:]
+  
+      div(style='margin-left:20px;margin-top:20px')
+      
+      dl
+      each tyre in brand_tyres
+        div.my-3
+          dt
+            a(href=tyre.url) #{tyre.name}
+          dd #{tyre.description}
+
+  else
+    p Do you really want to delete this Brand?
+
+    //- TO BE UPDATED WITH ADMIN CONFIRMATION
+    
+    form(method='POST' action='')
+      div.form-group.col-sm-9
+        input#brandid.form-control(type='hidden',name='brandid', required='true', value=brand._id )
+
+      button.btn.btn-primary(type='submit') Delete

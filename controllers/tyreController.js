@@ -156,12 +156,36 @@ exports.tyre_create_post = [
 
 // Display Tyre delete form on GET.
 exports.tyre_delete_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Tyre delete GET");
+  Tyre.findById(req.params.id, function (err, tyre) {
+    if (err) {
+      return next(err);
+    }
+    if (tyre == null) {
+      // No results.
+      res.redirect("/catalog/bookinstances");
+    }
+    // Successful, so render.
+    res.render("tyre_delete", {
+      title: "Delete Tyre",
+      tyre: tyre,
+    });
+  });
 };
 
 // Handle Tyre delete on POST.
 exports.tyre_delete_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Tyre delete POST");
+  Tyre.findById(req.body.tyreid, function (err, tyre) {
+    if (err) {
+      return next(err);
+    }
+    Tyre.findByIdAndRemove(req.body.tyreid, function deleteTyre(err) {
+      if (err) {
+        return next(err);
+      }
+      // Success - go to book instance list
+      res.redirect("/tyre");
+    });
+  });
 };
 
 // Display Tyre update form on GET.

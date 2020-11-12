@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 #{title}: #{tyre.name}
+  
+  p Do you really want to delete this Tyre?
+
+  //- TO BE UPDATED WITH ADMIN CONFIRMATION
+  
+  form(method='POST' action='')
+    div.form-group.col-sm-9
+      input#tyreid.form-control(type='hidden',name='tyreid', required='true', value=tyre._id )
+
+    button.btn.btn-primary(type='submit') Delete
