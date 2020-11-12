@@ -182,7 +182,7 @@ exports.tyre_delete_get = function (req, res) {
     }
     if (tyre == null) {
       // No results.
-      res.redirect("/catalog/bookinstances");
+      res.redirect("/tyres");
     }
     // Successful, so render.
     res.render("tyre_delete", {
@@ -193,20 +193,51 @@ exports.tyre_delete_get = function (req, res) {
 };
 
 // Handle Tyre delete on POST.
-exports.tyre_delete_post = function (req, res) {
-  Tyre.findById(req.body.tyreid, function (err, tyre) {
-    if (err) {
-      return next(err);
+exports.tyre_delete_post = [
+  // Validate and sanitise fields.
+  body("password")
+    .trim()
+    .escape()
+    .equals("password123")
+    .withMessage("Admin password incorrect."),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      Tyre.findById(req.params.id, function (err, tyre) {
+        if (err) {
+          return next(err);
+        }
+        if (tyre == null) {
+          // No results.
+          res.redirect("/tyres");
+        }
+        res.render("tyre_delete", {
+          title: "Delete Tyre",
+          tyre: tyre,
+          errors: errors.array(),
+        });
+
+        return;
+      });
+    } else {
+      Tyre.findById(req.body.tyreid, function (err, tyre) {
+        if (err) {
+          return next(err);
+        }
+        Tyre.findByIdAndRemove(req.body.tyreid, function deleteTyre(err) {
+          if (err) {
+            return next(err);
+          }
+          // Success - go to tyre list
+          res.redirect("/tyres");
+        });
+      });
     }
-    Tyre.findByIdAndRemove(req.body.tyreid, function deleteTyre(err) {
-      if (err) {
-        return next(err);
-      }
-      // Success - go to book instance list
-      res.redirect("/tyre");
-    });
-  });
-};
+  },
+];
 
 // Display Tyre update form on GET.
 exports.tyre_update_get = function (req, res) {
@@ -295,6 +326,11 @@ exports.tyre_update_post = [
       }
     })
     .withMessage("You may only submit image files."),
+  body("password")
+    .trim()
+    .escape()
+    .equals("password123")
+    .withMessage("Admin password incorrect."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {

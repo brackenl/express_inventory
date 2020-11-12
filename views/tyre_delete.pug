@@ -11,4 +11,14 @@ block content
     div.form-group.col-sm-9
       input#tyreid.form-control(type='hidden',name='tyreid', required='true', value=tyre._id )
 
+    div.form-group.row.col-sm-9.border.border-danger.p-2
+      p.col-sm-12.text-danger Admin password required to delete record
+      label.col-sm-3.col-form-label(for='password') Admin password:
+      input#description.form-control.col-sm-9(type='password', placeholder='Password' name='password' value='')  
+
+    if errors 
+      ul
+        for error in errors
+          li.text-danger.font-weight-bold!= error.msg
+
     button.btn.btn-primary(type='submit') Delete

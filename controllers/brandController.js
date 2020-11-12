@@ -154,42 +154,86 @@ exports.brand_delete_get = function (req, res) {
 };
 
 // Handle Brand delete on POST.
-exports.brand_delete_post = function (req, res) {
-  async.parallel(
-    {
-      brand: function (callback) {
-        Brand.findById(req.params.id).exec(callback);
-      },
-      brand_tyres: function (callback) {
-        Tyre.find({ brand: req.params.id }).exec(callback);
-      },
-    },
-    function (err, results) {
-      if (err) {
-        return next(err);
-      }
-      // Success
-      if (results.brand_tyres.length > 0) {
-        // Brand has tyres. Render in same way as for GET route.
-        res.render("brand_delete", {
-          title: "Delete Brand",
-          brand: results.brand,
-          brand_tyres: results.brand_tyres,
-        });
-        return;
-      } else {
-        // Author has no books. Delete object and redirect to the list of brands.
-        Brand.findByIdAndRemove(req.body.brandid, function deleteBrand(err) {
+exports.brand_delete_post = [
+  // Validate and sanitise fields.
+  body("password")
+    .trim()
+    .escape()
+    .equals("password123")
+    .withMessage("Admin password incorrect."),
+
+  function (req, res, next) {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      async.parallel(
+        {
+          brand: function (callback) {
+            Brand.findById(req.params.id).exec(callback);
+          },
+          brand_tyres: function (callback) {
+            Tyre.find({ brand: req.params.id }).exec(callback);
+          },
+        },
+        function (err, results) {
           if (err) {
             return next(err);
           }
-          // Success - go to brand list
-          res.redirect("/brands");
-        });
-      }
+          if (results.brand == null) {
+            // No results.
+            res.redirect("/brands");
+          }
+          res.render("brand_delete", {
+            title: "Delete Brand",
+            brand: results.brand,
+            brand_tyres: results.brand_tyres,
+            errors: errors.array(),
+          });
+
+          return;
+        }
+      );
+    } else {
+      async.parallel(
+        {
+          brand: function (callback) {
+            Brand.findById(req.params.id).exec(callback);
+          },
+          brand_tyres: function (callback) {
+            Tyre.find({ brand: req.params.id }).exec(callback);
+          },
+        },
+        function (err, results) {
+          if (err) {
+            return next(err);
+          }
+          // Success
+          if (results.brand_tyres.length > 0) {
+            // Brand has tyres. Render in same way as for GET route.
+            res.render("brand_delete", {
+              title: "Delete Brand",
+              brand: results.brand,
+              brand_tyres: results.brand_tyres,
+            });
+            return;
+          } else {
+            // Author has no books. Delete object and redirect to the list of brands.
+            Brand.findByIdAndRemove(req.body.brandid, function deleteBrand(
+              err
+            ) {
+              if (err) {
+                return next(err);
+              }
+              // Success - go to brand list
+              res.redirect("/brands");
+            });
+          }
+        }
+      );
     }
-  );
-};
+  },
+];
 
 // Display Brand update form on GET.
 exports.brand_update_get = function (req, res) {
@@ -238,6 +282,11 @@ exports.brand_update_post = [
       }
     })
     .withMessage("You may only submit image files."),
+  body("password")
+    .trim()
+    .escape()
+    .equals("password123")
+    .withMessage("Admin password incorrect."),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
